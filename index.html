@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XLSX Calculator v1</title>
+    <title>XLSX Calculator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body {
@@ -38,7 +38,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>XLSX Calculator (I3 onwards)</h1>
+        <h1>XLSX Calculator</h1>
         <input type="file" id="fileInput" class="file-input" accept=".xlsx">
         <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
         <div id="status"></div>
@@ -59,25 +59,23 @@
                     const workbook = XLSX.read(data, { type: 'array' });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                     
-                    // Get the range of the worksheet
                     const range = XLSX.utils.decode_range(firstSheet['!ref']);
                     
-                    // Start from row 3 (I3)
                     for (let R = 2; R <= range.e.r; R++) {
-                        const cellAddress = XLSX.utils.encode_cell({r: R, c: 8}); // Column I is index 8
+                        const cellAddress = XLSX.utils.encode_cell({r: R, c: 8});
                         const cell = firstSheet[cellAddress];
                         
                         if (!cell || cell.v === null || cell.v === '') {
-                            break; // Stop when null is reached
+                            break;
                         }
                         
                         if (cell && typeof cell.v === 'number') {
                             const numValue = cell.v;
-                            const calculatedValue = (numValue / 2) * 1.77;
+                            const calculatedValue = Math.floor((numValue / 2) * 1.77) + 1;
                             firstSheet[cellAddress] = {
                                 t: 'n',
                                 v: calculatedValue,
-                                w: calculatedValue.toFixed(2)
+                                w: calculatedValue.toString()
                             };
                         }
                     }
